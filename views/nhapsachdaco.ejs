@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Menu</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor03">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/thongke">Thống kê<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/nhapsachmoi">Nhập sách mới</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/nhapsachdaco">Nhập sách đã từng nhập</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/nhapbosach">Nhập sách nguyên bộ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/xuathang">Xuất sách lẻ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/xuathang">Xuất sách nguyên bộ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top:30px">
+
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Danh sách SGK đã có</h2>
+                <div class="form-group" id="tensach1">
+                    <label>Tên sách</label>
+                    <select name="tensach" class="form-control">
+                      <option>Sách 1</option>
+                      <option>Sách 2</option>
+                      <option>Sách 3</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Sách giáo khoa của lớp</label>
+                    <select name="lop" class="form-control" id="lop">
+                        <option value="1">Sách lớp 1</option>
+                        <option value="2">Sách lớp 2</option>
+                        <option value="3">Sách lớp 3</option>
+                        <option value="4">Sách lớp 4</option>
+                        <option value="5">Sách lớp 5</option>
+                        <option value="6">Sách lớp 6</option>
+                        <option value="7">Sách lớp 7</option>
+                        <option value="8">Sách lớp 8</option>
+                        <option value="9">Sách lớp 9</option>
+                        <option value="10">Sách lớp 10</option>
+                        <option value="11">Sách lớp 11</option>
+                        <option value="12">Sách lớp 12</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Số lượng</label>
+                    <input type="text" name="soluong" class="form-control">
+                </div>
+                <button class="btn-primary">Nhập hàng</button>
+            </div>
+
+            <div class="col-md-6">
+                <h2>Danh sách SGK đang có</h2>
+            </div>
+
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script>
+        function onLoad() {
+            $("#tensach1").hide();
+        }
+
+        function showHideBook() {
+            if (document.getElementById("opt1").checked == true) {
+                $("#tensach1").hide();
+                $("#tensach2").show();
+                $("#dongia").show();
+            } else {
+                $("#tensach2").hide();
+                $("#tensach1").show();
+                $("#dongia").hide();
+            }
+        }
+    </script>
+</head>
+
+<body onload="onLoad()">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Menu</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor03">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/thongke">Thống kê<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/nhaphang">Nhập sách mới</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/nhaphang">Nhập sách đã từng nhập</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/nhaphang">Nhập sách nguyên bộ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/xuathang">Xuất sách lẻ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/xuathang">Xuất sách nguyên bộ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top:30px">
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                          <input type="radio" class="form-check-input" onclick="showHideBook()" name="opt1" id="opt1" value="1" checked="">
+                          Nhập sách mới
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                          <input type="radio" class="form-check-input" onclick="showHideBook()" name="opt1" id="opt2" value="0">
+                          Sách đã có
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group" id="tensach1">
+                    <label>Tên sách</label>
+                    <select name="tensach" class="form-control">
+                      <option>Sách 1</option>
+                      <option>Sách 2</option>
+                      <option>Sách 3</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="tensach2">
+                    <label>Tên sách</label>
+                    <input type="text" name="tensach" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Sách giáo khoa của lớp</label>
+                    <select name="lop" class="form-control" id="lop">
+                      <option>Sách lớp 1</option>
+                      <option>Sách lớp 2</option>
+                      <option>Sách lớp 3</option>
+                      <option>Sách lớp 4</option>
+                      <option>Sách lớp 5</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="dongia">
+                    <label>Đơn giá</label>
+                    <input type="text" name="gia" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Số lượng</label>
+                    <input type="text" name="soluong" class="form-control">
+                </div>
+                <button class="btn-primary">Nhập hàng</button>
+            </div>
+
+            <div class="col-md-6">
+                <h2>Danh sách SGK đang có</h2>
+            </div>
+
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>
