@@ -1,7 +1,7 @@
 const mongoose = require('../common/db');
 const { Schema } = require('../common/db');
 
-let NhapHangSchema = new mongoose.Schema({
+let XuatHangSchema = new mongoose.Schema({
     _id: {
         type: Schema.Types.ObjectId
     },
@@ -11,13 +11,13 @@ let NhapHangSchema = new mongoose.Schema({
     lop: {
         type: String
     },
-    gianhap: {
+    giaxuat: {
         type: Number
     },
-    soluongnhap: {
+    soluongxuat: {
         type: Number
     },
-    thanhtiennhap: {
+    thanhtienxuat: {
         type: Number
     },
     date: {
@@ -25,7 +25,7 @@ let NhapHangSchema = new mongoose.Schema({
         default: Date.now
     }
 }, {
-    collection: 'nhaphang'
+    collection: 'xuathang'
 });
 
-module.exports = mongoose.model('NhapHang', NhapHangSchema);
+module.exports = mongoose.model('XuatHang', XuatHangSchema);

@@ -1,7 +1,7 @@
 const mongoose = require('../common/db');
 const { Schema } = require('../common/db');
 
-let NhapHangSchema = new mongoose.Schema({
+let ManageSchema = new mongoose.Schema({
     _id: {
         type: Schema.Types.ObjectId
     },
@@ -20,12 +20,24 @@ let NhapHangSchema = new mongoose.Schema({
     thanhtiennhap: {
         type: Number
     },
+    giaxuat: {
+        type: Number
+    },
+    soluongxuat: {
+        type: Number
+    },
+    thanhtienxuat: {
+        type: Number
+    },
+    tonkho: {
+        type: Number
+    },
     date: {
         type: Date,
         default: Date.now
     }
 }, {
-    collection: 'nhaphang'
+    collection: 'manage'
 });
 
-module.exports = mongoose.model('NhapHang', NhapHangSchema);
+module.exports = mongoose.model('manage', ManageSchema);

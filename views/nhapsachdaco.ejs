@@ -2,14 +2,84 @@
 <html lang="en">
 
 <head>
-    <title>Bootstrap Example</title>
+    <title>Nhập sách đã từng nhập</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#form').submit(function() {
 
+                // BƯỚC 1: Lấy dữ liệu từ form
+                var tensach = $("#tensach").val();
+                var soluongnhap = parseInt($.trim($('#soluongnhap').val()));
+                // BƯỚC 2: Validate dữ liệu
+                // Biến cờ hiệu
+                var flag = true;
+
+                // tensach
+                if (tensach == '' || tensach == null || tensach == undefined) {
+                    flag = false;
+                    alert("Hãy nhập tên sách")
+                    return flag;
+                }
+
+                if (!Number.isInteger(soluongnhap)) {
+                    flag = false;
+                    alert("Hãy nhập số lượng nhập bằng chữ số nguyên")
+                    return flag;
+                }
+
+                return flag;
+
+            });
+        })
+
+        function changeData() {
+            var val = document.getElementById("lop").value;
+            $.ajax({
+                    method: "POST",
+                    dataType: "json",
+                    url: "/layds",
+                    data: {
+                        lop: val
+                    }
+                })
+                .done(function(res) {
+                    const tongtiennhap = document.getElementById("tongtiennhap");
+                    tongtiennhap.innerHTML = '';
+                    const tbody = document.getElementById("tbody");
+                    tbody.innerHTML = '';
+                    let tdContent = '';
+                    let content = '';
+                    let ttnhap = 0;
+                    let ttxuat = 0;
+                    if (res != null && res != undefined) {
+                        for (let i = 0; i < res.list.length; i++) {
+                            tdContent = ''
+                            tdContent = tdContent + '<td>' + res.list[i].tensach + '</td>';
+                            tdContent = tdContent + '<td>' + 'Lớp' + res.list[i].lop + '</td>';
+                            tdContent = tdContent + '<td style="color:orange">' + res.list[i].soluongnhap + '</td>';
+                            tdContent = tdContent + '<td>' + res.list[i].gianhap + '</td>';
+                            tdContent = tdContent + '<td>' + res.list[i].thanhtiennhap + '</td>';
+                            tdContent = tdContent + '<td>' + res.list[i].soluongxuat + '</td>';
+                            tdContent = tdContent + '<td>' + res.list[i].giaxuat + '</td>';
+                            tdContent = tdContent + '<td>' + res.list[i].thanhtienxuat + '</td>';
+                            tdContent = tdContent + '<td>' + res.list[i].tonkho + '</td>';
+                            content = content + '<tr>' + tdContent + '</tr>';
+                            ttnhap = ttnhap + res.list[i].thanhtiennhap;
+                            ttxuat = ttxuat + res.list[i].thanhtienxuat;
+                        }
+                        $("#tbody").html(content);
+                        $("#tongtiennhap").html('Tổng tiền nhập : ' + ttnhap);
+                        $("#tongtienxuat").html('Tổng tiền bán : ' + ttxuat);
+                    }
+                });
+        }
+    </script>
 </head>
 
 <body>
@@ -35,10 +105,10 @@
                     <a class="nav-link" href="/nhapbosach">Nhập sách nguyên bộ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/xuathang">Xuất sách lẻ</a>
+                    <a class="nav-link" href="/xuatsachle">Xuất sách lẻ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/xuathang">Xuất sách nguyên bộ</a>
+                    <a class="nav-link" href="/xuatsachbo">Xuất sách nguyên bộ</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">About</a>
@@ -47,23 +117,16 @@
         </div>
     </nav>
 
-    <div class="container" style="margin-top:30px">
+    <div class="container" style="margin-top:30px;min-width: 100%;">
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <h2>Danh sách SGK đã có</h2>
-                <div class="form-group" id="tensach1">
-                    <label>Tên sách</label>
-                    <select name="tensach" class="form-control">
-                      <option>Sách 1</option>
-                      <option>Sách 2</option>
-                      <option>Sách 3</option>
-                    </select>
-                </div>
+                <form action="/nhapsachdaco" method="POST" id="form">
 
-                <div class="form-group">
-                    <label>Sách giáo khoa của lớp</label>
-                    <select name="lop" class="form-control" id="lop">
+                    <div class="form-group">
+                        <label>Sách giáo khoa của lớp</label>
+                        <select name="lop" class="form-control" id="lop" onchange="changeData()">
                         <option value="1">Sách lớp 1</option>
                         <option value="2">Sách lớp 2</option>
                         <option value="3">Sách lớp 3</option>
@@ -77,17 +140,93 @@
                         <option value="11">Sách lớp 11</option>
                         <option value="12">Sách lớp 12</option>
                     </select>
-                </div>
+                    </div>
 
-                <div class="form-group">
-                    <label>Số lượng</label>
-                    <input type="text" name="soluong" class="form-control">
-                </div>
-                <button class="btn-primary">Nhập hàng</button>
+                    <div class="form-group">
+                        <label>Tên sách</label>
+                        <select name="tensach" class="form-control" id="tensach">
+                      <% list.forEach(function(el) { %>
+                        <option value="<%=el.tensach%>"> <%=el.tensach%></option>
+                      <% }); %>
+                    </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Số lượng nhập</label>
+                        <input type="text" name="soluongnhap" class="form-control" id="soluongnhap">
+                    </div>
+                    <button class="btn-primary">Nhập hàng</button>
+                </form>
             </div>
 
-            <div class="col-md-6">
-                <h2>Danh sách SGK đang có</h2>
+            <div class="col-md-9">
+                <h2>Thống kê SGK theo lớp</h2>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Tên sách</th>
+                            <th scope="col">Lớp</th>
+                            <th scope="col">Số lượng đã nhập</th>
+                            <th scope="col">Giá nhập</th>
+                            <th scope="col">Tổng tiền nhập</th>
+                            <th scope="col">Số lượng đã bán</th>
+                            <th scope="col">Giá bán</th>
+                            <th scope="col">Tổng tiền bán</th>
+                            <th scope="col">Số lượng tồn kho</th>
+                        </tr>
+                    </thead>
+                    <tbody class="stats" id="tbody">
+                        <% let tongtiennhap = 0;%>
+                            <% let tongtienxuat = 0;%>
+                                <% list.forEach(function(el) { %>
+                                    <tr>
+                                        <td>
+                                            <%= el.tensach %>
+                                        </td>
+                                        <td>
+                                            Lớp
+                                            <%= el.lop %>
+                                        </td>
+                                        <td style="color:orange">
+                                            <%= el.soluongnhap %>
+                                        </td>
+                                        <td>
+                                            <%= el.gianhap %>
+                                        </td>
+                                        <td>
+                                            <%= el.thanhtiennhap %>
+                                        </td>
+                                        <td>
+                                            <%= el.soluongxuat %>
+                                        </td>
+                                        <td>
+                                            <%= el.giaxuat %>
+                                        </td>
+                                        <td>
+                                            <%= el.thanhtienxuat %>
+                                        </td>
+                                        <td>
+                                            <%= el.tonkho %>
+                                        </td>
+                                    </tr>
+                                    <% tongtiennhap = tongtiennhap + el.thanhtiennhap;%>
+                                        <% tongtienxuat = tongtienxuat + el.thanhtienxuat;%>
+                                            <% }); %>
+
+                    </tbody>
+                </table>
+                <div>
+                    <%if (tongtiennhap > 0) {%>
+                        <div class="stats" id="tongtiennhap" style="float:right;">Tổng tiền nhập:
+                            <%= tongtiennhap %>
+                        </div><br>
+                        <%}%>
+                            <%if (tongtienxuat > 0) {%>
+                                <div class="stats" id="tongtienxuat" style="float:right;">Tổng tiền bán:
+                                    <%= tongtienxuat %>
+                                </div>
+                                <%}%>
+                </div>
             </div>
 
         </div>
