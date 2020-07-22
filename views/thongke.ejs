@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Thống kê</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
+    <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+    rel = "stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    
+    <script>
+        $(function() {
+            $( "#datepicker-1" ).datepicker();
+            $('#datepicker-1').datepicker('setDate', 'today');
+            $( "#datepicker-2" ).datepicker();
+            $('#datepicker-2').datepicker('setDate', 'today');
+
+            $('#form').submit(function() {
+
+                // BƯỚC 1: Lấy dữ liệu từ form
+                var phanloai = $("#phanloai").val();
+                var nbd = $.trim($('#datepicker-1').val());
+                var nkt = $.trim($('#datepicker-2').val());
+                // BƯỚC 2: Validate dữ liệu
+                // Biến cờ hiệu
+                var flag = true;
+
+                // tensach
+                if (phanloai == '' || phanloai == null || phanloai == undefined) {
+                flag = false;
+                alert("Hãy chọn phân loại")
+                return flag;
+                }
+
+                if (nbd == '' || nbd == null || nbd == undefined) {
+                flag = false;
+                alert("Hãy nhập ngày bắt đầu")
+                return flag;
+                } else {
+                    if (!isValidDate(nbd)) {
+                        flag = false;
+                        alert("Hãy nhập ngày bắt đầu đúng định dạng MM/DD/YYYY")
+                        return flag;
+                    }
+                }
+
+                if (nkt == '' || nkt == null || nkt == undefined) {
+                flag = false;
+                alert("Hãy nhập ngày kết thúc")
+                return flag;
+                } else {
+                    if (!isValidDate(nkt)) {
+                        flag = false;
+                        alert("Hãy nhập ngày kết thúc đúng định dạng MM/DD/YYYY")
+                        return flag;
+                    }
+                }
+
+                return flag;
+
+            });
+         });
+
+         // Validates that the input string is a valid date formatted as "mm/dd/yyyy"
+function isValidDate(dateString)
+{
+    // First check for the pattern
+    if(!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateString))
+        return false;
+
+    // Parse the date parts to integers
+    var parts = dateString.split("/");
+    var day = parseInt(parts[1], 10);
+    var month = parseInt(parts[0], 10);
+    var year = parseInt(parts[2], 10);
+
+    // Check the ranges of month and year
+    if(year < 1000 || year > 3000 || month == 0 || month > 12)
+        return false;
+
+    var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+
+    // Adjust for leap years
+    if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+        monthLength[1] = 29;
+
+    // Check the range of the day
+    return day > 0 && day <= monthLength[month - 1];
+};
+
+    </script>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Menu</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor03">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/thongke">Thống kê<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/nhapsachmoi">Nhập sách mới</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/nhapsachdaco">Nhập sách đã từng nhập</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/nhapbosach">Nhập sách nguyên bộ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/xuatsachle">Xuất sách lẻ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/xuatsachbo">Xuất sách nguyên bộ</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top:30px">
+        <div class="row">
+            <div class="col-md-4">
+                <form action="/thongke" method="POST" id="form">
+                    <div class="form-group">
+                        <label>Phân loại</label>
+                        <select name="phanloai" class="form-control" id="phanloai">
+                            <option value="1">Nhập hàng</option>
+                            <option value="2">Xuất hàng</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Từ ngày</label> 
+                        <input type = "text" name="ngaybatdau" class="form-control" id = "datepicker-1">
+                    </div> 
+                    <div class="form-group">
+                        <label>Đến ngày:</label> 
+                        <input type = "text"  name="ngayketthuc" class="form-control" id = "datepicker-2">
+                    </div>
+                    <button class="btn-primary">Tìm kiếm</button>
+                </form>
+            </div>
+            <div class="col-md-8">
+                <% if (phanloai == 1) {%>
+                    <h2>Thống kê nhập hàng</h2>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Tên sách</th>
+                                <th scope="col">Lớp</th>
+                                <th scope="col">Số lượng đã nhập</th>
+                                <th scope="col">Giá nhập</th>
+                                <th scope="col">Tổng tiền nhập</th>
+                                <th scope="col">Ngày nhập</th>
+                            </tr>
+                        </thead>
+                        <tbody class="stats" id="tbody">
+                                <% let tongtiennhap = 0;%>
+                                        <% list.forEach(function(el) { %>
+                                            <tr>
+                                                <td>
+                                                    <%= el.tensach %>
+                                                </td>
+                                                <td>
+                                                    Lớp
+                                                    <%= el.lop %>
+                                                </td>
+                                                <td>
+                                                    <%= el.soluongnhap %>
+                                                </td>
+                                                <td>
+                                                    <%= el.gianhap %>
+                                                </td>
+                                                <td>
+                                                    <%= el.thanhtiennhap %>
+                                                </td>
+                                                <td>
+                                                    <%let current_datetime = new Date(el.date) %>
+                                                    
+                                                    <%=current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate()%>
+                                                </td>
+                                            </tr>
+                                            <% tongtiennhap = tongtiennhap + el.thanhtiennhap;%>
+                                                    <% }); %>
+
+                        </tbody>
+                    </table>
+                    <div>
+                        <%if (tongtiennhap > 0) {%>
+                            <div class="stats" id="tongtiennhap" style="font-size: 25px; float:right;color:orange">Tổng tiền nhập:
+                                <%= tongtiennhap %>
+                            </div><br>
+                            <%}%>
+                    </div>
+                <%} else {%>
+                    <h2>Thống kê xuất hàng</h2>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Tên sách</th>
+                                <th scope="col">Lớp</th>
+                                <th scope="col">Số lượng đã xuất</th>
+                                <th scope="col">Giá xuất</th>
+                                <th scope="col">Tổng tiền xuất</th>
+                                <th scope="col">Ngày xuất</th>
+                            </tr>
+                        </thead>
+                        <tbody class="stats" id="tbody">
+                            <% let tongtienxuat = 0;%>
+                                    <% list.forEach(function(el) { %>
+                                        <tr>
+                                            <td>
+                                                <%= el.tensach %>
+                                            </td>
+                                            <td>
+                                                Lớp
+                                                <%= el.lop %>
+                                            </td>
+                                            <td>
+                                                <%= el.soluongxuat %>
+                                            </td>
+                                            <td>
+                                                <%= el.giaxuat %>
+                                            </td>
+                                            <td>
+                                                <%= el.thanhtienxuat %>
+                                            </td>
+                                            <td>
+                                                <%let current_datetime = new Date(el.date) %>
+                                                
+                                                <%=current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate()%>
+                                            </td>
+                                        </tr>
+                                        <% tongtienxuat = tongtienxuat + el.thanhtienxuat;%>
+                                                <% }); %>
+
+                        </tbody>
+                    </table>
+                    <div>
+                        <%if (tongtienxuat > 0) {%>
+                            <div class="stats" id="tongtienxuat" style="font-size: 25px; float:right;color:orange">Tổng tiền xuất:
+                                <%= tongtienxuat %>
+                            </div><br>
+                            <%}%>
+                    </div>
+                <%}%>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

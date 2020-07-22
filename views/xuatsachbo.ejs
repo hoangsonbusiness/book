@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Xuất sách lẻ</title>
+    <title>Xuất bộ sách</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
@@ -14,19 +14,11 @@
             $('#form').submit(function() {
 
                 // BƯỚC 1: Lấy dữ liệu từ form
-                var tensach = $("#tensach").val();
                 var soluongxuat = parseInt($.trim($('#soluongxuat').val()));
-                var tonkho = $("#hdtonkho").val();
+                var botonkho = $("#hdbotonkho").val();
                 // BƯỚC 2: Validate dữ liệu
                 // Biến cờ hiệu
                 var flag = true;
-
-                // tensach
-                if (tensach == '' || tensach == null || tensach == undefined) {
-                    flag = false;
-                    alert("Hãy nhập tên sách")
-                    return flag;
-                }
 
                 if (!Number.isInteger(soluongxuat)) {
                     flag = false;
@@ -34,7 +26,7 @@
                     return flag;
                 }
 
-                if (tonkho - soluongxuat < 0) {
+                if (botonkho - soluongxuat < 0) {
                     flag = false;
                     alert("Số lượng trong kho không đủ để xuất hàng")
                     return flag;
@@ -47,8 +39,6 @@
 
         function changeData() {
             var val = document.getElementById("lop").value;
-            $("#tensach").html('');
-            let tonkho = 0;
             $.ajax({
                     method: "POST",
                     dataType: "json",
@@ -59,76 +49,53 @@
                 })
                 .done(function(res) {
                     const tongtiennhap = document.getElementById("tongtiennhap");
-                    tongtiennhap.innerHTML = '';
+                    if (tongtiennhap != null) tongtiennhap.innerHTML = '';
                     const tbody = document.getElementById("tbody");
-                    tbody.innerHTML = '';
+                    if (tbody != null) tbody.innerHTML = '';
                     let tdContent = '';
                     let content = '';
                     let ttnhap = 0;
                     let ttxuat = 0;
-                    let opt = '';
                     if (res != null && res != undefined) {
                         for (let i = 0; i < res.list.length; i++) {
                             tdContent = ''
                             tdContent = tdContent + '<td>' + res.list[i].tensach + '</td>';
                             tdContent = tdContent + '<td>' + 'Lớp' + res.list[i].lop + '</td>';
-                            tdContent = tdContent + '<td>' + res.list[i].soluongnhap + '</td>';
+                            tdContent = tdContent + '<td style="color:orange">' + res.list[i].soluongnhap + '</td>';
                             tdContent = tdContent + '<td>' + res.list[i].gianhap + '</td>';
                             tdContent = tdContent + '<td>' + res.list[i].thanhtiennhap + '</td>';
-                            tdContent = tdContent + '<td style="color:orange">' + res.list[i].soluongxuat + '</td>';
+                            tdContent = tdContent + '<td>' + res.list[i].soluongxuat + '</td>';
                             tdContent = tdContent + '<td>' + res.list[i].giaxuat + '</td>';
                             tdContent = tdContent + '<td>' + res.list[i].thanhtienxuat + '</td>';
                             tdContent = tdContent + '<td>' + res.list[i].tonkho + '</td>';
                             content = content + '<tr>' + tdContent + '</tr>';
                             ttnhap = ttnhap + res.list[i].thanhtiennhap;
                             ttxuat = ttxuat + res.list[i].thanhtienxuat;
-
-                            opt = opt + '<option value="' + res.list[i].tensach + '">' + res.list[i].tensach + '</option>'
-                            if (i == 0) {
-                                tonkho = res.list[0].tonkho;
-                            }
-
                         }
                         $("#tbody").html(content);
                         $("#tongtiennhap").html('Tổng tiền nhập : ' + ttnhap);
                         $("#tongtienxuat").html('Tổng tiền bán : ' + ttxuat);
-
-                        $("#tonkho").html('0');
-                        $("#tonkho").html(tonkho);
-                        $("#hdtonkho").val(tonkho);
-
-                        $("#tensach").html(opt);
                     }
                 });
+
+                getDataWareHouse(val)
         }
 
-        function changeDataOpt() {
-            var tensach = $("#tensach").val();
-            var val = document.getElementById("lop").value;
-
+        function getDataWareHouse(val) {
             $.ajax({
                     method: "POST",
                     dataType: "json",
-                    url: "/laytonkho",
+                    url: "/getbosachtonkho",
                     data: {
-                        lop: val,
-                        tensach: tensach
+                        lop: val
                     }
                 })
                 .done(function(res) {
-                    $("#tonkho").html('0');
-                    $("#tonkho").html(res.tonkho);
-                    $("#hdtonkho").val(res.tonkho);
+                    $("#botonkho").html(res.botonkho);
+                    $("#hdbotonkho").val(res.botonkho); 
                 });
         }
     </script>
-    <style>
-        @media only screen and (max-width: 990px) {
-            .container {
-                min-width: 100%;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -167,43 +134,33 @@
 
         <div class="row">
             <div class="col-md-3">
-                <h2>Danh sách SGK đang còn trong kho</h2>
-                <form action="/xuatsachle" method="POST" id="form">
-
+                <h2>Nhập sách nguyên bộ</h2>
+                <form action="/xuatsachbo" method="POST" id="form">
                     <div class="form-group">
                         <label>Sách giáo khoa của lớp</label>
                         <select name="lop" class="form-control" id="lop" onchange="changeData()">
-                        <option value="1">Sách lớp 1</option>
-                        <option value="2">Sách lớp 2</option>
-                        <option value="3">Sách lớp 3</option>
-                        <option value="4">Sách lớp 4</option>
-                        <option value="5">Sách lớp 5</option>
-                        <option value="6">Sách lớp 6</option>
-                        <option value="7">Sách lớp 7</option>
-                        <option value="8">Sách lớp 8</option>
-                        <option value="9">Sách lớp 9</option>
-                        <option value="10">Sách lớp 10</option>
-                        <option value="11">Sách lớp 11</option>
-                        <option value="12">Sách lớp 12</option>
+                      <option value="1">Sách lớp 1</option>
+                      <option value="2">Sách lớp 2</option>
+                      <option value="3">Sách lớp 3</option>
+                      <option value="4">Sách lớp 4</option>
+                      <option value="5">Sách lớp 5</option>
+                      <option value="6">Sách lớp 6</option>
+                      <option value="7">Sách lớp 7</option>
+                      <option value="8">Sách lớp 8</option>
+                      <option value="9">Sách lớp 9</option>
+                      <option value="10">Sách lớp 10</option>
+                      <option value="11">Sách lớp 11</option>
+                      <option value="12">Sách lớp 12</option>
                     </select>
                     </div>
 
                     <div class="form-group">
-                        <label>Tên sách</label>
-                        <select name="tensach" class="form-control" id="tensach" onclick="changeDataOpt()">
-                      <% list.forEach(function(el) { %>
-                        <option value="<%=el.tensach%>"> <%=el.tensach%></option>
-                      <% }); %>
-                    </select>
+                        <label style="font-size: 25px;">Số lượng trong kho : <span id="botonkho" style="color: orange;"><%=botonkho%></span></label>
+                        <input type="hidden" id="hdbotonkho" name="botonkho" value="<%=botonkho%>">
                     </div>
 
                     <div class="form-group">
-                        <label style="font-size: 25px;">Số lượng trong kho : <span id="tonkho" style="color: orange;"><%=tonkho%></span></label>
-                        <input type="hidden" id="hdtonkho" name="tonkho" value="<%=tonkho%>">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Số lượng xuất hàng</label>
+                        <label>Số lượng xuất</label>
                         <input type="text" name="soluongxuat" class="form-control" id="soluongxuat">
                     </div>
                     <button class="btn-primary">Xuất hàng</button>

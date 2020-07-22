@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const Manage = require('./model/manage');
 const NhapHang = require('./model/nhaphang');
 const XuatHang = require('./model/xuathang');
-const { json } = require('body-parser');
+var isodate = require("isodate");
 // const cors = require('cors');
 const app = express();
 
@@ -48,7 +48,7 @@ app.get('/nhapsachmoi', (req, res) => {
     )
 });
 
-app.post('/nhapsachmoi', async(req, res) => {
+app.post('/nhapsachmoi', (req, res) => {
     nhapsachmoi(req, res);
 });
 
@@ -353,22 +353,153 @@ app.get('/xuatsachbo', (req, res) => {
         lop: 1
     }
 
-    Manage.find(body).limit(1).exec().then(
+    Manage.find(body).sort({tonkho: 'asc'}).exec().then(
         rs => {
-            console.log(JSON.stringify(rs))
-                // listSach = rs;
-
-            // if (req.body.lop == undefined) {
-            //     tonkho = rs[0].tonkho
-            // }
-            // res.render('xuatsachle', { list: listSach, tonkho: tonkho })
+            if (rs != null) {
+                listSach = rs;
+                botonkho = rs[0].tonkho
+            }
+            
+            res.render('xuatsachbo', { list: listSach, botonkho: botonkho })
         }
     ).catch(
         err => {
-            // res.render('xuatsachle', { list: listSach, tonkho: tonkho })
+            res.render('xuatsachbo', { list: listSach, botonkho: botonkho })
         }
     )
 })
+
+app.post('/getbosachtonkho', (req, res) => {
+    botonkho = 0;
+    let body = {
+        lop: req.body.lop
+    }
+
+    Manage.find(body).sort({tonkho: 'asc'}).exec().then(
+        rs => {
+            console.log('vao'+JSON.stringify(rs.length))
+            if (rs != null && rs.length > 0) {
+                botonkho = rs[0].tonkho
+            }
+            
+            res.status(200).json({ botonkho: botonkho })
+        }
+    ).catch(
+        err => {
+            res.status(400).json({ botonkho: botonkho })
+        }
+    )
+})
+
+app.post('/xuatsachbo', (req, res) => {
+    xuatsachbo(req, res)
+});
+
+function xuatsachbo(req, res) {
+
+    Manage.find({
+            lop: req.body.lop
+        }).sort({tonkho: 'asc'}).exec()
+        .then(rs => {
+            let promi = new Promise(resolve => {
+                let el;
+                let tmp = rs.length - 1
+                for (let i = 0; i <= tmp; i++) {
+                    el = rs[i]
+                    el.soluongxuat = parseInt(el.soluongxuat) + parseInt(req.body.soluongxuat)
+                    el.thanhtienxuat = el.thanhtienxuat + el.giaxuat * parseInt(req.body.soluongxuat)
+                    el.tonkho = el.soluongnhap - el.soluongxuat
+                    if (i == 0) {
+                        botonkho = el.tonkho
+                    }
+
+                    let data_xuathang = {
+                        _id: new mongoose.Types.ObjectId(),
+                        tensach: el.tensach,
+                        lop: req.body.lop,
+                        giaxuat: el.giaxuat,
+                        soluongxuat: req.body.soluongxuat,
+                        thanhtienxuat: req.body.soluongxuat * el.giaxuat
+                    }
+
+                    XuatHang.create(data_xuathang, (err, rs) => {
+                        if (err) console.log(err + '')
+                    })
+
+                    el.save(err => {
+                        if (err) console.log(err + '')
+                        if (i == tmp) {
+                            resolve()
+                        }
+                    })
+                }
+            })
+
+            promi.then(() => {
+                Manage.find({ lop: req.body.lop }).exec().then(
+                    rs => {
+                        list = rs;
+                        res.render('xuatsachbo', { list: list, botonkho: botonkho })
+                    }
+                ).catch(
+                    err => res.render('xuatsachbo', { list: list, botonkho: botonkho })
+                )
+            })
+        })
+}
+let phanloai = 1
+app.get('/thongke', (req, res) => {
+    phanloai = 1
+    listThongKe = []
+    res.render('thongke', {list: listThongKe, phanloai: phanloai})
+});
+
+let listThongKe = []
+app.post('/thongke', (req, res) => {
+    listThongKe = []
+    let pl = req.body.phanloai
+    let date1 = convertIsoDate(req.body.ngaybatdau, true)
+    let date2 = convertIsoDate(req.body.ngayketthuc, false)
+    if (pl == 1) {
+        NhapHang.find({"date": {"$gte": date1, "$lte": date2}})
+            .exec().then(rs => {
+
+                listThongKe = rs 
+                phanloai = 1
+                res.render('thongke', {list: listThongKe, phanloai: phanloai})
+            })
+            .catch(err => {
+                phanloai = 1
+                res.render('thongke', {list: listThongKe, phanloai: phanloai})
+            })
+    } else {
+        XuatHang.find({"date": {"$gte": date1, "$lte": date2}})
+        .exec().then(rs => {
+            listThongKe = rs 
+            phanloai = 2
+            res.render('thongke', {list: listThongKe, phanloai: phanloai})
+        })
+        .catch(err => {
+            phanloai = 2
+            res.render('thongke', {list: listThongKe, phanloai: phanloai})
+        })
+    }
+});
+
+function convertIsoDate(date, flag) {
+    let dt = new Date(date)
+    let year = dt.getFullYear()
+    let month = ((dt.getMonth() + 1).toString().length == 1) ? '0' + (dt.getMonth() + 1) : (dt.getMonth()+1)
+    let d = dt.getDate().toString().length == 1 ? '0' + dt.getDate() : dt.getDate()
+    let vl
+    if(flag) {
+        vl = year + '-' + month + '-' + d + 'T00:00:00Z'
+    } else {
+        vl = year + '-' + month + '-' + d  + 'T23:59:59Z'
+    }
+    return isodate(vl)
+}
+
 
 app.post('/laytonkho', (req, res) => {
     tonkho = 0;
