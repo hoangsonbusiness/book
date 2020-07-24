@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Nhập sách mới</title>
+    <title>Nhập sản phẩm mới</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
@@ -75,7 +75,14 @@
                         for (let i = 0; i < res.list.length; i++) {
                             tdContent = ''
                             tdContent = tdContent + '<td>' + res.list[i].tensach + '</td>';
-                            tdContent = tdContent + '<td>' + 'Lớp' + res.list[i].lop + '</td>';
+                            if (res.list[i].lop == 13) {
+                                tdContent = tdContent + '<td>' + 'Văn phòng phẩm' + '</td>';
+                            } else if (res.list[i].lop == 14) {
+                                tdContent = tdContent + '<td>' + 'Đồng phục' + '</td>';
+                            } else {
+                                tdContent = tdContent + '<td>' + 'Lớp' + res.list[i].lop + '</td>';
+                            }
+
                             tdContent = tdContent + '<td style="color:orange">' + res.list[i].soluongnhap + '</td>';
                             tdContent = tdContent + '<td>' + res.list[i].gianhap + '</td>';
                             tdContent = tdContent + '<td>' + res.list[i].thanhtiennhap + '</td>';
@@ -99,7 +106,7 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Menu</a>
+        <a class="navbar-brand" href="../">Menu</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -110,16 +117,16 @@
                     <a class="nav-link" href="/thongke">Thống kê<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/nhapsachmoi">Nhập sách mới</a>
+                    <a class="nav-link" href="/nhapsachmoi">Nhập sản phẩm mới</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/nhapsachdaco">Nhập sách đã từng nhập</a>
+                    <a class="nav-link" href="/nhapsachdaco">Nhập sản phẩm đã từng nhập</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/nhapbosach">Nhập sách nguyên bộ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/xuatsachle">Xuất sách lẻ</a>
+                    <a class="nav-link" href="/xuatsachle">Xuất sản phẩm lẻ</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/xuatsachbo">Xuất sách nguyên bộ</a>
@@ -132,10 +139,10 @@
 
         <div class="row">
             <div class="col-md-3">
-                <h2>Nhập SGK mới</h2>
+                <h2>Nhập mặt hàng mới</h2>
                 <form action="/nhapsachmoi" method="POST" id="form">
                     <div class="form-group">
-                        <label>Sách giáo khoa của lớp</label>
+                        <label>Phân loại</label>
                         <select name="lop" class="form-control" id="lop" onchange="changeData()">
                             <option value="1">Sách lớp 1</option>
                             <option value="2">Sách lớp 2</option>
@@ -149,11 +156,13 @@
                             <option value="10">Sách lớp 10</option>
                             <option value="11">Sách lớp 11</option>
                             <option value="12">Sách lớp 12</option>
+                            <option value="13">Văn phòng phẩm</option>
+                            <option value="14">Đồng phục</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label>Tên sách</label>
+                        <label>Tên sản phẩm</label>
                         <input type="text" name="tensach" class="form-control" id="tensach">
                     </div>
 
@@ -176,12 +185,12 @@
             </div>
 
             <div class="col-md-9">
-                <h2>Thống kê SGK theo lớp</h2>
+                <h2>Thống kê sản phẩm</h2>
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">Tên sách</th>
-                            <th scope="col">Lớp</th>
+                            <th scope="col">Tên sản phẩm</th>
+                            <th scope="col">Phân loại</th>
                             <th scope="col">Số lượng đã nhập</th>
                             <th scope="col">Giá nhập</th>
                             <th scope="col">Tổng tiền nhập</th>
@@ -200,8 +209,14 @@
                                             <%= el.tensach %>
                                         </td>
                                         <td>
-                                            Lớp
-                                            <%= el.lop %>
+                                            <% if (el.lop == 13 ) {%>
+                                                Văn phòng phẩm
+                                                <% } else if (el.lop == 14) { %>
+                                                    Đồng phục
+                                                    <% } else { %>
+                                                        Lớp
+                                                        <%= el.lop %>
+                                                            <% } %>
                                         </td>
                                         <td style="color:orange">
                                             <%= el.soluongnhap %>

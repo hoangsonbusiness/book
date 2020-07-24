@@ -353,13 +353,13 @@ app.get('/xuatsachbo', (req, res) => {
         lop: 1
     }
 
-    Manage.find(body).sort({tonkho: 'asc'}).exec().then(
+    Manage.find(body).sort({ tonkho: 'asc' }).exec().then(
         rs => {
             if (rs != null) {
                 listSach = rs;
                 botonkho = rs[0].tonkho
             }
-            
+
             res.render('xuatsachbo', { list: listSach, botonkho: botonkho })
         }
     ).catch(
@@ -375,13 +375,12 @@ app.post('/getbosachtonkho', (req, res) => {
         lop: req.body.lop
     }
 
-    Manage.find(body).sort({tonkho: 'asc'}).exec().then(
+    Manage.find(body).sort({ tonkho: 'asc' }).exec().then(
         rs => {
-            console.log('vao'+JSON.stringify(rs.length))
             if (rs != null && rs.length > 0) {
                 botonkho = rs[0].tonkho
             }
-            
+
             res.status(200).json({ botonkho: botonkho })
         }
     ).catch(
@@ -399,7 +398,7 @@ function xuatsachbo(req, res) {
 
     Manage.find({
             lop: req.body.lop
-        }).sort({tonkho: 'asc'}).exec()
+        }).sort({ tonkho: 'asc' }).exec()
         .then(rs => {
             let promi = new Promise(resolve => {
                 let el;
@@ -451,7 +450,7 @@ let phanloai = 1
 app.get('/thongke', (req, res) => {
     phanloai = 1
     listThongKe = []
-    res.render('thongke', {list: listThongKe, phanloai: phanloai})
+    res.render('thongke', { list: listThongKe, phanloai: phanloai })
 });
 
 let listThongKe = []
@@ -461,41 +460,41 @@ app.post('/thongke', (req, res) => {
     let date1 = convertIsoDate(req.body.ngaybatdau, true)
     let date2 = convertIsoDate(req.body.ngayketthuc, false)
     if (pl == 1) {
-        NhapHang.find({"date": {"$gte": date1, "$lte": date2}})
+        NhapHang.find({ "date": { "$gte": date1, "$lte": date2 } })
             .exec().then(rs => {
 
-                listThongKe = rs 
+                listThongKe = rs
                 phanloai = 1
-                res.render('thongke', {list: listThongKe, phanloai: phanloai})
+                res.render('thongke', { list: listThongKe, phanloai: phanloai })
             })
             .catch(err => {
                 phanloai = 1
-                res.render('thongke', {list: listThongKe, phanloai: phanloai})
+                res.render('thongke', { list: listThongKe, phanloai: phanloai })
             })
     } else {
-        XuatHang.find({"date": {"$gte": date1, "$lte": date2}})
-        .exec().then(rs => {
-            listThongKe = rs 
-            phanloai = 2
-            res.render('thongke', {list: listThongKe, phanloai: phanloai})
-        })
-        .catch(err => {
-            phanloai = 2
-            res.render('thongke', {list: listThongKe, phanloai: phanloai})
-        })
+        XuatHang.find({ "date": { "$gte": date1, "$lte": date2 } })
+            .exec().then(rs => {
+                listThongKe = rs
+                phanloai = 2
+                res.render('thongke', { list: listThongKe, phanloai: phanloai })
+            })
+            .catch(err => {
+                phanloai = 2
+                res.render('thongke', { list: listThongKe, phanloai: phanloai })
+            })
     }
 });
 
 function convertIsoDate(date, flag) {
     let dt = new Date(date)
     let year = dt.getFullYear()
-    let month = ((dt.getMonth() + 1).toString().length == 1) ? '0' + (dt.getMonth() + 1) : (dt.getMonth()+1)
+    let month = ((dt.getMonth() + 1).toString().length == 1) ? '0' + (dt.getMonth() + 1) : (dt.getMonth() + 1)
     let d = dt.getDate().toString().length == 1 ? '0' + dt.getDate() : dt.getDate()
     let vl
-    if(flag) {
+    if (flag) {
         vl = year + '-' + month + '-' + d + 'T00:00:00Z'
     } else {
-        vl = year + '-' + month + '-' + d  + 'T23:59:59Z'
+        vl = year + '-' + month + '-' + d + 'T23:59:59Z'
     }
     return isodate(vl)
 }

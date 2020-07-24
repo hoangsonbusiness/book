@@ -14,13 +14,13 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
     <script>
-        $(function () {
+        $(function() {
             $("#datepicker-1").datepicker();
             $('#datepicker-1').datepicker('setDate', 'today');
             $("#datepicker-2").datepicker();
             $('#datepicker-2').datepicker('setDate', 'today');
 
-            $('#form').submit(function () {
+            $('#form').submit(function() {
 
                 // BƯỚC 1: Lấy dữ liệu từ form
                 var phanloai = $("#phanloai").val();
@@ -91,7 +91,6 @@
             // Check the range of the day
             return day > 0 && day <= monthLength[month - 1];
         };
-
     </script>
 </head>
 
@@ -99,8 +98,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="../">Menu</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03"
-            aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -110,16 +108,16 @@
                     <a class="nav-link" href="/thongke">Thống kê<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/nhapsachmoi">Nhập sách mới</a>
+                    <a class="nav-link" href="/nhapsachmoi">Nhập sản phẩm mới</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/nhapsachdaco">Nhập sách đã từng nhập</a>
+                    <a class="nav-link" href="/nhapsachdaco">Nhập sản phẩm đã từng nhập</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/nhapbosach">Nhập sách nguyên bộ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/xuatsachle">Xuất sách lẻ</a>
+                    <a class="nav-link" href="/xuatsachle">Xuất sản phẩm lẻ</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/xuatsachbo">Xuất sách nguyên bộ</a>
@@ -152,113 +150,123 @@
             </div>
             <div class="col-md-8">
                 <% if (phanloai == 1) {%>
-                <h2>Thống kê nhập hàng</h2>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">Tên sách</th>
-                            <th scope="col">Lớp</th>
-                            <th scope="col">Số lượng đã nhập</th>
-                            <th scope="col">Giá nhập</th>
-                            <th scope="col">Tổng tiền nhập</th>
-                            <th scope="col">Ngày nhập</th>
-                        </tr>
-                    </thead>
-                    <tbody class="stats" id="tbody">
-                        <% let tongtiennhap = 0;%>
-                        <% list.forEach(function(el) { %>
-                        <tr>
-                            <td>
-                                <%= el.tensach %>
-                            </td>
-                            <td>
-                                Lớp
-                                <%= el.lop %>
-                            </td>
-                            <td>
-                                <%= el.soluongnhap %>
-                            </td>
-                            <td>
-                                <%= el.gianhap %>
-                            </td>
-                            <td>
-                                <%= el.thanhtiennhap %>
-                            </td>
-                            <td>
-                                <%let current_datetime = new Date(el.date) %>
-
-                                <%=current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate()%>
-                            </td>
-                        </tr>
-                        <% tongtiennhap = tongtiennhap + el.thanhtiennhap;%>
-                        <% }); %>
-
-                    </tbody>
-                </table>
-                <div>
-                    <%if (tongtiennhap > 0) {%>
-                    <div class="stats" id="tongtiennhap" style="font-size: 25px; float:right;color:orange">Tổng tiền
-                        nhập:
-                        <%= tongtiennhap %>
-                    </div><br>
-                    <%}%>
-                    </div>
-                <%} else {%>
-                    <h2>Thống kê xuất hàng</h2>
+                    <h2>Thống kê nhập hàng</h2>
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th scope="col">Tên sách</th>
-                                <th scope="col">Lớp</th>
-                                <th scope="col">Số lượng đã xuất</th>
-                                <th scope="col">Giá xuất</th>
-                                <th scope="col">Tổng tiền xuất</th>
-                                <th scope="col">Ngày xuất</th>
+                                <th scope="col">Tên sản phẩm</th>
+                                <th scope="col">Phân loại</th>
+                                <th scope="col">Số lượng đã nhập</th>
+                                <th scope="col">Giá nhập</th>
+                                <th scope="col">Tổng tiền nhập</th>
+                                <th scope="col">Ngày nhập</th>
                             </tr>
                         </thead>
                         <tbody class="stats" id="tbody">
-                            <% let tongtienxuat = 0;%>
-                            <% list.forEach(function(el) { %>
-                            <tr>
-                                <td>
-                                    <%= el.tensach %>
-                                </td>
-                                <td>
-                                    Lớp
-                                    <%= el.lop %>
-                                </td>
-                                <td>
-                                    <%= el.soluongxuat %>
-                                </td>
-                                <td>
-                                    <%= el.giaxuat %>
-                                </td>
-                                <td>
-                                    <%= el.thanhtienxuat %>
-                                </td>
-                                <td>
-                                    <%let current_datetime = new Date(el.date) %>
+                            <% let tongtiennhap = 0;%>
+                                <% list.forEach(function(el) { %>
+                                    <tr>
+                                        <td>
+                                            <%= el.tensach %>
+                                        </td>
+                                        <td>
+                                            <% if (el.lop == 13 ) {%>
+                                                Văn phòng phẩm
+                                                <% } else if (el.lop == 14) { %>
+                                                    Đồng phục
+                                                    <% } else { %>
+                                                        Lớp
+                                                        <%= el.lop %>
+                                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <%= el.soluongnhap %>
+                                        </td>
+                                        <td>
+                                            <%= el.gianhap %>
+                                        </td>
+                                        <td>
+                                            <%= el.thanhtiennhap %>
+                                        </td>
+                                        <td>
+                                            <%let current_datetime = new Date(el.date) %>
 
-                                    <%=current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate()%>
-                                </td>
-                            </tr>
-                            <% tongtienxuat = tongtienxuat + el.thanhtienxuat;%>
-                            <% }); %>
+                                                <%=current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate()%>
+                                        </td>
+                                    </tr>
+                                    <% tongtiennhap = tongtiennhap + el.thanhtiennhap;%>
+                                        <% }); %>
 
                         </tbody>
                     </table>
                     <div>
-                        <%if (tongtienxuat > 0) {%>
-                        <div class="stats" id="tongtienxuat" style="font-size: 25px; float:right;color:orange">Tổng tiền
-                            xuất:
-                            <%= tongtienxuat %>
-                        </div><br>
+                        <%if (tongtiennhap > 0) {%>
+                            <div class="stats" id="tongtiennhap" style="font-size: 25px; float:right;color:orange">Tổng tiền nhập:
+                                <%= tongtiennhap %>
+                            </div><br>
+                            <%}%>
+                    </div>
+                    <%} else {%>
+                        <h2>Thống kê xuất hàng</h2>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Tên sản phẩm</th>
+                                    <th scope="col">Phân loại</th>
+                                    <th scope="col">Số lượng đã xuất</th>
+                                    <th scope="col">Giá xuất</th>
+                                    <th scope="col">Tổng tiền xuất</th>
+                                    <th scope="col">Ngày xuất</th>
+                                </tr>
+                            </thead>
+                            <tbody class="stats" id="tbody">
+                                <% let tongtienxuat = 0;%>
+                                    <% list.forEach(function(el) { %>
+                                        <tr>
+                                            <td>
+                                                <%= el.tensach %>
+                                            </td>
+                                            <td>
+                                                <% if (el.lop == 13 ) {%>
+                                                    Văn phòng phẩm
+                                                    <% } else if (el.lop == 14) { %>
+                                                        Đồng phục
+                                                        <% } else { %>
+                                                            Lớp
+                                                            <%= el.lop %>
+                                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <%= el.soluongxuat %>
+                                            </td>
+                                            <td>
+                                                <%= el.giaxuat %>
+                                            </td>
+                                            <td>
+                                                <%= el.thanhtienxuat %>
+                                            </td>
+                                            <td>
+                                                <%let current_datetime = new Date(el.date) %>
+
+                                                    <%=current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate()%>
+                                            </td>
+                                        </tr>
+                                        <% tongtienxuat = tongtienxuat + el.thanhtienxuat;%>
+                                            <% }); %>
+
+                            </tbody>
+                        </table>
+                        <div>
+                            <%if (tongtienxuat > 0) {%>
+                                <div class="stats" id="tongtienxuat" style="font-size: 25px; float:right;color:orange">Tổng tiền xuất:
+                                    <%= tongtienxuat %>
+                                </div><br>
+                                <%}%>
+                        </div>
                         <%}%>
-                    </div>
-                <%}%>
-                    </div>
-                </div>
             </div>
+        </div>
+    </div>
 </body>
 
 </html>
